@@ -17,6 +17,6 @@ int main(int argc, char **argv)
 		return ret;
 	}
     //load first image from file
-    image_process(argv[1],argv[2],argv[3],false);
+    image_process(argv[1],argv[2],argv[3],string(""), true);
     return 0;
 }

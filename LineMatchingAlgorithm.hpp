@@ -28,22 +28,15 @@ int image_process(string img1path, string img2path, string outpath, string param
     unsigned int imageWidth = leftImage.cols; //图片的宽与高
     unsigned int imageHeight = leftImage.rows;
 
-    srand((unsigned)time(0));
-    int lowest = 100, highest = 255;
-    int range = (highest - lowest) + 1;
-    unsigned int r, g, b; //the color of lines
-
     //initial variables
     cv::Mat leftColorImage(leftImage.size(), CV_8UC3);
     cv::Mat rightColorImage(rightImage.size(), CV_8UC3);
-
     cvtColor(leftImage, leftColorImage, cv::COLOR_GRAY2RGB);
     cvtColor(rightImage, rightColorImage, cv::COLOR_GRAY2RGB);
 
     ///////////####################################################################
     ///////////####################################################################
     //extract lines, compute their descriptors and match lines
-    //提取线段，计算descriptor并进行线段匹配
     LineDescriptor lineDesc;
     PairwiseLineMatching lineMatch;
 
@@ -54,7 +47,11 @@ int image_process(string img1path, string img2path, string outpath, string param
     lineDesc.GetLineDescriptor(leftImage, linesInLeft);
     lineDesc.GetLineDescriptor(rightImage, linesInRight);
     //TODO remove BIAS dependecies in PairwiseMatching
+
+    double t = (double)cv::getTickCount();
     lineMatch.LineMatching(linesInLeft, linesInRight, matchResult);
+    t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
+    std::cout<<"time lineMatch: "<<t*1000<<"ms"<<std::endl;
     //save the param of matching
     if(!paramfilepath.empty())
     {
@@ -69,6 +66,11 @@ int image_process(string img1path, string img2path, string outpath, string param
     cv::Point endPoint;
     cv::Point point;
 
+    // draw color setting
+    srand((unsigned)time(0));
+    int lowest = 100, highest = 255;
+    int range = (highest - lowest) + 1;
+    unsigned int r, g, b; //the color of lines
     for (unsigned int i = 0; i < linesInLeft.size(); i++)
     {
         r = lowest + int(rand() % range);
@@ -91,7 +93,7 @@ int image_process(string img1path, string img2path, string outpath, string param
     {
         imwrite("LinesInImage1.png", leftColorImage);
         imwrite("LinesInImage2.png", rightColorImage);
-    }
+    } 
     //TODO enable after BIAS dependecies in PairwiseMatching have been removed
     //  ///////////####################################################################
     //  ///////////####################################################################
@@ -117,8 +119,8 @@ int image_process(string img1path, string img2path, string outpath, string param
         startPoint = cv::Point(int(linesInLeft[lineIDLeft][0].startPointX), int(linesInLeft[lineIDLeft][0].startPointY));
         endPoint = cv::Point(int(linesInLeft[lineIDLeft][0].endPointX), int(linesInLeft[lineIDLeft][0].endPointY));
         cv::line(leftColorImage, startPoint, endPoint, CV_RGB(r1[pair], g1[pair], b1[pair]), 4, cv::LINE_AA, 0);
-        startPoint = cvPoint(int(linesInRight[lineIDRight][0].startPointX), int(linesInRight[lineIDRight][0].startPointY));
-        endPoint = cvPoint(int(linesInRight[lineIDRight][0].endPointX), int(linesInRight[lineIDRight][0].endPointY));
+        startPoint = cv::Point(int(linesInRight[lineIDRight][0].startPointX), int(linesInRight[lineIDRight][0].startPointY));
+        endPoint = cv::Point(int(linesInRight[lineIDRight][0].endPointX), int(linesInRight[lineIDRight][0].endPointY));
         cv::line(rightColorImage, startPoint, endPoint, CV_RGB(r1[pair], g1[pair], b1[pair]), 4, cv::LINE_AA, 0);
     }
 
@@ -143,19 +145,18 @@ int image_process(string img1path, string img2path, string outpath, string param
     cv::addWeighted(cvResultColorImage1, 0.5, cvResultColorImage2, 0.5, 0.0, cvResultColorImage, -1);
 
     cv::imwrite(outpath+".png", cvResultColorImage);
-    cvResultColorImage.release();
-    cvResultColorImage1.release();
-    cvResultColorImage2.release();
-    leftImage.release();
-    rightImage.release();
-    leftColorImage.release();
-    rightColorImage.release();
-    roi.release();
-    roi2.release();
+    // cvResultColorImage.release();
+    // cvResultColorImage1.release();
+    // cvResultColorImage2.release();
+    // leftImage.release();
+    // rightImage.release();
+    // leftColorImage.release();
+    // rightColorImage.release();
+    // roi.release();
+    // roi2.release();
 
     cout << "number of total matches = " << matchResult.size() / 2 << endl;
     matchResult.clear();
     linesInLeft.clear();
     linesInRight.clear();
-
 }

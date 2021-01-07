@@ -38,6 +38,8 @@ using namespace std;
 
 //this is used when get matching result from principal eigen vector
 #define WeightOfMeanEigenVec 0.1
+const double TwoPI = 2 * M_PI;
+
 
 double getNormL2(double *arr, int size)
 {
@@ -80,7 +82,7 @@ void PairwiseLineMatching::LineMatching(ScaleLines &linesInLeft, ScaleLines &lin
 
 double PairwiseLineMatching::GlobalRotationOfImagePair_(ScaleLines &linesInLeft, ScaleLines &linesInRight)
 {
-	double TwoPI = 2 * M_PI;
+	// double TwoPI = 2 * M_PI;
 	double rotationAngle = TwoPI;
 
 	//step 1: compute the angle histogram of lines in the left and right images
@@ -200,7 +202,7 @@ double PairwiseLineMatching::GlobalRotationOfImagePair_(ScaleLines &linesInLeft,
 
 void PairwiseLineMatching::BuildAdjacencyMatrix_(ScaleLines &linesInLeft, ScaleLines &linesInRight)
 {
-	double TwoPI = 2 * M_PI;
+	// double TwoPI = 2 * M_PI;
 	const unsigned int numLineLeft = linesInLeft.size();
 	const unsigned int numLineRight = linesInRight.size();
 	/*first step, find nodes which are possible correspondent lines in the left and right images according to
@@ -217,7 +219,6 @@ void PairwiseLineMatching::BuildAdjacencyMatrix_(ScaleLines &linesInLeft, ScaleL
 	std::vector<float> desRight;
 
 	//first compute descriptor distances
-
 	float *desL, *desR, *desMax, *desOld;
 
 	float minDis, dis, temp;
@@ -295,7 +296,9 @@ void PairwiseLineMatching::BuildAdjacencyMatrix_(ScaleLines &linesInLeft, ScaleL
 			}
 		} //end inner loop
 	}
-	cout << "the number of possible matched line pair = " << nodesList_.size() << endl;
+	cout << "-- the number of linesInRight = " << linesInRight.size() << endl;
+	cout << "-- the number of linesInLeft = "  << linesInLeft.size()  << endl;
+	cout << "-- the number of possible matched line pair = " << nodesList_.size() << endl;
 	//	desDisMat.Save("DescriptorDis.txt");
 
 	/*Second step, build the adjacency matrix which reflect the geometric constraints between nodes.
@@ -303,7 +306,7 @@ void PairwiseLineMatching::BuildAdjacencyMatrix_(ScaleLines &linesInLeft, ScaleL
      */
 	unsigned int dim = nodesList_.size(); // Dimension of the problem.
 
-	//std::array<double, dim_temp> adjacenceVec;
+
 	std::vector<double> adjacenceVec(dim * (dim + 1) / 2, 0);
 
 	int nnz = 0; // Number of nonzero elements in adjacenceMat.
@@ -349,7 +352,6 @@ void PairwiseLineMatching::BuildAdjacencyMatrix_(ScaleLines &linesInLeft, ScaleL
 	double disX, disY;
 	double disS, disE;
 	double similarity;
-
 
 	for (unsigned int j = 0; j < dim; j++)
 	{ //column
@@ -588,7 +590,7 @@ void PairwiseLineMatching::BuildAdjacencyMatrix_(ScaleLines &linesInLeft, ScaleL
 
 void PairwiseLineMatching::MatchingResultFromPrincipalEigenvector_(ScaleLines &linesInLeft, ScaleLines &linesInRight, std::vector<unsigned int> &matchResult)
 {
-	double TwoPI = 2 * M_PI;
+	// double TwoPI = 2 * M_PI;
 	std::vector<unsigned int> matchRet1;
 	std::vector<unsigned int> matchRet2;
 	double matchScore1 = 0;
@@ -603,23 +605,22 @@ void PairwiseLineMatching::MatchingResultFromPrincipalEigenvector_(ScaleLines &l
 	double relativeAngleDif;
 
 	//store eigenMap for debug
-	std::fstream resMap;
-	ostringstream fileNameMap;
-	fileNameMap << "eigenVec.txt";
-	resMap.open(fileNameMap.str().c_str(), std::ios::out);
+	// std::fstream resMap;
+	// ostringstream fileNameMap;
+	// fileNameMap << "eigenVec.txt";
+	// resMap.open(fileNameMap.str().c_str(), std::ios::out);
 
-	double mat[linesInLeft.size()][linesInRight.size()];
-	memset(mat, 0, linesInLeft.size() * linesInRight.size());
-	for (iter = eigenMap_.begin(); iter != eigenMap_.end(); iter++)
-	{
-		id = iter->second;
-		resMap << nodesList_[id].leftLineID << "    " << nodesList_[id].rightLineID << "   " << iter->first << endl;
-		mat[nodesList_[id].leftLineID][nodesList_[id].rightLineID] = iter->first;
-	}
-	//mat.Save("eigenMap.txt");
-	// matSave("eigenMap.txt");
-	resMap.flush();
-	resMap.close();
+	// double mat[linesInLeft.size()][linesInRight.size()];
+	// memset(mat, 0, linesInLeft.size() * linesInRight.size());
+	// for (iter = eigenMap_.begin(); iter != eigenMap_.end(); iter++)
+	// {
+	// 	id = iter->second;
+	// 	resMap << nodesList_[id].leftLineID << "    " << nodesList_[id].rightLineID << "   " << iter->first << endl;
+	// 	mat[nodesList_[id].leftLineID][nodesList_[id].rightLineID] = iter->first;
+	// }
+	// // matSave("eigenMap.txt");
+	// resMap.flush();
+	// resMap.close();
 
 	/*first try, start from the top element in eigenmap */
 	while (1)

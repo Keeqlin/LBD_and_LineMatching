@@ -1,0 +1,2 @@
+/Library/Developer/CommandLineTools/usr/bin/ar qc libLineMatchingLib.a  CMakeFiles/LineMatchingLib.dir/PairwiseLineMatching.cpp.o CMakeFiles/LineMatchingLib.dir/LineDescriptor.cpp.o CMakeFiles/LineMatchingLib.dir/EDLineDetector.cpp.o
+/Library/Developer/CommandLineTools/usr/bin/ranlib libLineMatchingLib.a

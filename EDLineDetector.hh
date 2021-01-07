@@ -45,7 +45,7 @@ struct EDLineParam{
 };
 
 #define RELATIVE_ERROR_FACTOR   100.0
-#define M_LN10   2.30258509299404568402
+// #define M_LN10   2.30258509299404568402
 #define log_gamma(x)    ((x)>15.0?log_gamma_windschitl(x):log_gamma_lanczos(x))
 
 /* This class is used to detect lines from input image.

@@ -6,9 +6,10 @@
 
 using namespace std;
 
+const float twoPI = 2*M_PI;
+
 LineDescriptor::LineDescriptor()
 {
-	srand ( time(NULL) );
 	ksize_       = 5;
 	numOfOctave_ = 5;//5
 	edLineVec_.resize(numOfOctave_);
@@ -42,7 +43,6 @@ LineDescriptor::LineDescriptor()
 }
 
 LineDescriptor::LineDescriptor(unsigned int numOfBand, unsigned int widthOfBand){
-	srand ( time(NULL) );
 //	cout<<"Call LineDescriptor constructor function"<<endl;
 	ksize_       = 5;
 	numOfOctave_ = 5;//5
@@ -156,7 +156,6 @@ int LineDescriptor::OctaveKeyLines(cv::Mat & image, ScaleLines &keyLines)
 	/*more than one octave image, organize lines in scale space.
 	 *lines corresponding to the same line in octave images should have the same index in the ScaleLineVec */
 	if(numOfOctave_>1){
-		float twoPI = 2*M_PI;
 		unsigned int closeLineID;
 		float endPointDis,minEndPointDis,minLocalDis,maxLocalDis;
 		float lp0,lp1, lp2, lp3, np0,np1, np2, np3;
@@ -260,7 +259,7 @@ int LineDescriptor::OctaveKeyLines(cv::Mat & image, ScaleLines &keyLines)
 	//Reorganize the detected lines into keyLines
 	keyLines.clear();
 	keyLines.resize(lineIDInScaleLineVec);
-  unsigned int tempID;
+  	unsigned int tempID;
 	float s1,e1,s2,e2;
 	bool shouldChange;
 	OctaveSingleLine singleLine;
@@ -598,17 +597,8 @@ int LineDescriptor::GetLineDescriptor(cv::Mat & image, ScaleLines & keyLines)
    ComputeLBD_(keyLines);
    t = ((double)cv::getTickCount() - t)/cv::getTickFrequency();
    std::cout<<"time descriptor extraction: "<<t<<"s"<<std::endl;
-   
-//    for(int j = 0; j<keyLines.size(); j++)
-//    {
-//        for(int k = 0; k<keyLines[j].size(); k++)
-//        {
-//            for(int i = 0; i<keyLines[j][k].descriptor.size(); i++)
-//                std::cout<<"keylines["<<j<<"]["<<k<<"].descriptor["<<i<<"]: "<<keyLines[j][k].descriptor[i]<<std::endl;
-//        }
-//    }
-    
-    return 1;
+  
+   return 1;
 }
 
 /*Match line by their descriptors.

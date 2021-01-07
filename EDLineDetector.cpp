@@ -22,9 +22,10 @@ EDLineDetector::EDLineDetector()
 	ksize_ = 5;
 	sigma_ = 1.0;
 	gradienThreshold_ = 80; // ***** ORIGINAL WAS 25
+	// gradienThreshold_ = 25; // ***** ORIGINAL WAS 25
 	anchorThreshold_  = 2;//8
 	scanIntervals_    = 2;//2
-	minLineLen_       = 15;
+	minLineLen_       = 30;
 	lineFitErrThreshold_ = 1.4;
 	InitEDLine_();
 }
@@ -971,7 +972,7 @@ int EDLineDetector::EDline(cv::Mat &image, LineChains &lines, bool smoothed)
 //	srand((unsigned)time(0));
 //	int lowest=100, highest=255;
 //	int range=(highest-lowest)+1;
-//	//	CvPoint point;
+//	//	cv::Point point;
 //	//	CvFont  font;
 //	//	cvInitFont(&font,CV_FONT_HERSHEY_SIMPLEX ,1.0,1.0,0,1);
 //	int r, g, b; //the color of lines
@@ -984,7 +985,7 @@ int EDLineDetector::EDline(cv::Mat &image, LineChains &lines, bool smoothed)
 //			cvSet2D(cvColorImg,pLineYCors[offsetInLineArray],pLineXCors[offsetInLineArray],s);
 //		}
 //		//		iter = lines[i].begin();
-//		//		point = cvPoint(iter->x,iter->y);
+//		//		point = cv::Point(iter->x,iter->y);
 //		//		char buf[10];
 //		//		sprintf( buf,   "%d ",  i);
 //		//		cvPutText(cvColorImg,buf,point,&font,CV_RGB(r,g,b));
